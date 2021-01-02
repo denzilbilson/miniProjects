@@ -1,0 +1,43 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+#game{
+    width: 600px;
+    height: 300px;
+    border: 1px solid black;
+}
+
+#player{
+    width: 30px;
+    height: 60px;
+    background-color: black;
+    position: relative;
+    top: 240px;
+}
+
+#obstacle{
+    width: 30px;
+    height: 30px;
+    background-color: green;
+    position: relative;
+    top: 210px;
+    left: 570px;
+    animation: obstacle 1s linear infinite;
+}
+.jump-animation{
+    animation: jump 500ms linear;
+}
+
+@keyframes obstacle{
+    0%{left:570px;}
+    100%{left:0px;}
+}
+
+@keyframes jump{
+    0%{top:240px;}
+    30%{top:180px;}
+    60%{top:200px;}
+    100%{top:240px;}
+}
