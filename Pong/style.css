@@ -1,0 +1,7 @@
+body{
+    width: 80vw;
+    margin:auto;
+}
+#container, #gameCanvas{
+    margin: auto;
+}
