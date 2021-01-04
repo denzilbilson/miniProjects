@@ -54,19 +54,19 @@ function draw(){
 // tracks game inputs
 function key(){
     document.addEventListener('keydown', function(event) {
-        if(event.key == ("ArrowLeft" || "a")) {
+        if(event.key == ("ArrowLeft") || event.key == "a") {
             xVel = -10;
             yVel = 0;
         }
-        if(event.key == ("ArrowRight" || "d")) {
+        if(event.key == ("ArrowRight") || event.key == "d") {
             xVel = 10;
             yVel = 0;
         }
-        if(event.key == ("ArrowUp" || "w")) {
+        if(event.key == ("ArrowUp") || event.key == "w") {
             xVel = 0;
             yVel = -10;
         }
-        if(event.key == ("ArrowDown" || "s")) {
+        if(event.key == ("ArrowDown") || event.key == "s") {
             xVel = 0;
             yVel = 10;
         }
