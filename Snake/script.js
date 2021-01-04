@@ -13,22 +13,24 @@ var snake = [
     [30, 10]
 ];
 
+// apple position
+var appleX;
+var appleY;
+
 window.onload = () => {
-    document.addEventListener('keydown', function(event) {
-     console.log(event.key);
-    });
-    
     // define how many times setInterval function runs a second
     var framesPerSecond = 10;
 
     canvas = document.getElementById("gameCanvas");
     canvasContext = canvas.getContext('2d');
+    appleX = parseInt(canvas.width)/2;
+    appleY = parseInt(canvas.height)/2;
     key();
     
     setInterval(() => {
         move();
+        collision();
         draw();
-        console.log("X: " + xVel + "| Y: " + yVel);
     }, 1000 / framesPerSecond);
 };
 
@@ -45,6 +47,7 @@ function move(){
 function draw(){
     //main background canvas
     createRect(0, 0, canvas.width, canvas.height, '#ffffff');
+    createRect(appleX, appleY, 10, 10, '#ff5555');
     snake.forEach((coor) =>{
         createRect(coor[0], coor[1], 10, 10, '#000000');
     })
@@ -72,6 +75,24 @@ function key(){
         }
     });
 }
+
+function collision(){
+    if(snake[0][0] == appleX && snake[0][1] == appleY){
+        generateApple();
+    }
+}
+
+// generates apple position
+function generateApple(){
+    var checkApple = JSON.stringify(snake); // turn snake array into string to check apple position (avoid potential overlap)
+    do{
+        appleX = 10 * (1 + Math.floor(Math.random() * ((canvas.height/10) - 1))); // returns multiple of 10 between 10 and 390
+        appleY = 10 * (1 + Math.floor(Math.random() * ((canvas.width/10) - 1)));
+    }while(checkApple.includes([appleX,appleY])) // make sure apple does not overlap snake
+}
+
+
+
 
 function createRect(leftX, topY, width, height, color) {
     canvasContext.fillStyle = color;
