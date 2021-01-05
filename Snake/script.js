@@ -13,6 +13,9 @@ var snake = [
     [30, 10]
 ];
 
+// track last position of tail
+var tailPos;
+
 // apple position
 var appleX;
 var appleY;
@@ -23,24 +26,28 @@ window.onload = () => {
 
     canvas = document.getElementById("gameCanvas");
     canvasContext = canvas.getContext('2d');
+
+    // set starting position of apple to center
     appleX = parseInt(canvas.width)/2;
     appleY = parseInt(canvas.height)/2;
     key();
     
-    setInterval(() => {
+    const intervalID  = setInterval(() => {
         move();
         collision();
         draw();
+        if(endGame()){
+            clearInterval(intervalID);
+        }
     }, 1000 / framesPerSecond);
 };
 
 // modifies array to set new player positions
 function move(){
-    snake.pop();
+    tailPos = snake.pop();
     var x = snake[0][0] + xVel;
     var y = snake[0][1] + yVel;
     snake.unshift([x,y]);
-
 }
 
 // draw canvas and game every frame refresh
@@ -79,6 +86,7 @@ function key(){
 function collision(){
     if(snake[0][0] == appleX && snake[0][1] == appleY){
         generateApple();
+        snake.push(tailPos);
     }
 }
 
@@ -86,20 +94,30 @@ function collision(){
 function generateApple(){
     var checkApple = JSON.stringify(snake); // turn snake array into string to check apple position (avoid potential overlap)
     do{
-        appleX = 10 * (1 + Math.floor(Math.random() * ((canvas.height/10) - 1))); // returns multiple of 10 between 10 and 390
-        appleY = 10 * (1 + Math.floor(Math.random() * ((canvas.width/10) - 1)));
+        appleX = 10 * (1 + Math.floor(Math.random() * ((canvas.height/10) - 2))); // returns multiple of 10 between 10 and 380 (canvas height and width are 400)
+        appleY = 10 * (1 + Math.floor(Math.random() * ((canvas.width/10) - 2)));
     }while(checkApple.includes([appleX,appleY])) // make sure apple does not overlap snake
+}
+
+function endGame(){
+    if(snake[0][0] > (canvas.height - 10) || snake[0][0] < 0 || snake[0][1] > (canvas.width - 10) || snake[0][1] < 0){
+        if(!alert("You have collided into a wall. Game over.")){
+            window.location.reload();
+            return 1;
+        }
+    }
+    return 0;
 }
 
 
 
-
+// uses canvasContext functions to make drawing rect easier
 function createRect(leftX, topY, width, height, color) {
     canvasContext.fillStyle = color;
     canvasContext.fillRect(leftX, topY, width, height);
 
     if(color == "#000000"){
-    canvasContext.strokeStyle = '#ffffff'
+    canvasContext.strokeStyle = '#ffffff';
     }else if(color == "#ffffff"){
         canvasContext.strokeStyle = '#000000';
     }
