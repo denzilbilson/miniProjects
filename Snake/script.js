@@ -36,8 +36,8 @@ window.onload = () => {
         move();
         collision();
         draw();
-        if(endGame()){
-            clearInterval(intervalID);
+        if(endGame()){ // if game ends
+            clearInterval(intervalID); // stop calling setInterval
         }
     }, 1000 / framesPerSecond);
 };

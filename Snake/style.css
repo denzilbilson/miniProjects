@@ -1,0 +1,15 @@
+body{
+    width: 80vw;
+    margin:auto;
+}
+#container{
+    display: block;
+    margin: auto;
+}
+h1{
+    text-align: center;
+}
+#gameCanvas{
+    display: block;
+    margin: auto;
+}
