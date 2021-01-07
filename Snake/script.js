@@ -2,6 +2,9 @@
 var canvas;
 var canvasContext;
 
+// player score
+var score = 0;
+
 // track velocity of snake
 var xVel = 0;
 var yVel = 10;
@@ -49,6 +52,11 @@ window.onload = () => {
     //     }
     // }, 1000 / framesPerSecond);
 };
+
+function addScore() {
+    score += 1
+    document.querySelector("#score").innerHTML = score
+}
 
 /////////////////////
 function dynamicInterval(){
@@ -129,10 +137,12 @@ function key(){
     });
 }
 
+// if snake collides with an apple
 function collision(){
     if(snake[0][0] == appleX && snake[0][1] == appleY){
         generateApple();
         snake.push(tailPos);
+        addScore()
     }
 }
 
@@ -145,6 +155,7 @@ function generateApple(){
     }while(checkApple.includes([appleX,appleY])) // make sure apple does not overlap snake
 }
 
+// when snake goes out of bounds of the canvas
 function endGame(){
     if(snake[0][0] > (canvas.height - 10) || snake[0][0] < 0 || snake[0][1] > (canvas.width - 10) || snake[0][1] < 0){
         if(!alert("You have collided into a wall. Game over.")){
