@@ -20,9 +20,11 @@ var tailPos;
 var appleX;
 var appleY;
 
+//
+var framesPerSecond = 10;
+
 window.onload = () => {
     // define how many times setInterval function runs a second
-    var framesPerSecond = 10;
 
     canvas = document.getElementById("gameCanvas");
     canvasContext = canvas.getContext('2d');
@@ -31,17 +33,37 @@ window.onload = () => {
     appleX = parseInt(canvas.width)/2;
     appleY = parseInt(canvas.height)/2;
     key();
-    
-    const intervalID  = setInterval(() => {
+    dynamicInterval();
+    // const intervalID  = setInterval(() => {
+    //     document.addEventListener('keydown', function(event) {
+    //         if(event.key == ' '){
+    //         move();
+    //         draw();
+    //         }
+    //     }, {once:true})
+    //     move();
+    //     collision();
+    //     draw();
+    //     if(endGame()){ // if game ends
+    //         clearInterval(intervalID); // stop calling setInterval
+    //     }
+    // }, 1000 / framesPerSecond);
+};
+
+/////////////////////
+function dynamicInterval(){
+    setTimeout(() => {
         move();
         collision();
         draw();
         if(endGame()){ // if game ends
-            clearInterval(intervalID); // stop calling setInterval
+            return;
         }
+        dynamicInterval();
     }, 1000 / framesPerSecond);
-};
+}
 
+/////////////////////
 // modifies array to set new player positions
 function move(){
     tailPos = snake.pop();
@@ -64,21 +86,45 @@ function draw(){
 // tracks game inputs
 function key(){
     document.addEventListener('keydown', function(event) {
+        if(event.key == ' '){
+            framesPerSecond = 30;
+        }
+    });
+    document.addEventListener('keydown', function(event) {
         if(event.key == ("ArrowLeft") || event.key == "a") {
+            if(xVel == 10){
+                return;
+            }
             xVel = -10;
             yVel = 0;
+            
         }
         if(event.key == ("ArrowRight") || event.key == "d") {
+            if(xVel == -10){
+                return;
+            }
             xVel = 10;
             yVel = 0;
         }
         if(event.key == ("ArrowUp") || event.key == "w") {
+            if(yVel == 10){
+                return;
+            }
             xVel = 0;
             yVel = -10;
         }
         if(event.key == ("ArrowDown") || event.key == "s") {
+            if(yVel == -10){
+                return;
+            }
             xVel = 0;
             yVel = 10;
+        }
+    });
+
+    document.addEventListener('keyup', function(event) {
+        if(event.key == ' '){
+            framesPerSecond = 10;
         }
     });
 }
