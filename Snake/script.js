@@ -27,7 +27,7 @@ var tailPos;
 var appleX;
 var appleY;
 
-//
+// render calls a second
 var framesPerSecond = 10;
 
 window.onload = () => {
@@ -41,20 +41,6 @@ window.onload = () => {
     appleY = parseInt(canvas.height)/2;
     key();
     dynamicInterval();
-    // const intervalID  = setInterval(() => {
-    //     document.addEventListener('keydown', function(event) {
-    //         if(event.key == ' '){
-    //         move();
-    //         draw();
-    //         }
-    //     }, {once:true})
-    //     move();
-    //     collision();
-    //     draw();
-    //     if(endGame()){ // if game ends
-    //         clearInterval(intervalID); // stop calling setInterval
-    //     }
-    // }, 1000 / framesPerSecond);
 };
 
 function addScore() {
@@ -62,7 +48,7 @@ function addScore() {
     document.querySelector("#score").innerHTML = score
 }
 
-/////////////////////
+// replicates setInterval function, but permits dynamically changing timing mechanism
 function dynamicInterval(){
     setTimeout(() => {
         move();
@@ -77,7 +63,6 @@ function dynamicInterval(){
     }, 1000 / framesPerSecond);
 }
 
-/////////////////////
 // modifies array to set new player positions
 function move(){
     tailPos = snake.pop();
@@ -88,9 +73,10 @@ function move(){
 
 // draw canvas and game every frame refresh
 function draw(){
-    //main background canvas
+    // main background canvas
     createRect(0, 0, canvas.width, canvas.height, '#ffffff');
     createRect(appleX, appleY, 10, 10, '#ff5555');
+    // snake body
     snake.forEach((coor) =>{
         createRect(coor[0], coor[1], 10, 10, '#000000');
     })
