@@ -9,6 +9,10 @@ var score = 0;
 var xVel = 0;
 var yVel = 10;
 
+// redundant variable to avoid turnaround error
+var currentX = xVel;
+var currentY = yVel;
+
 // snake array
 var snake = [
     [50, 10],
@@ -67,6 +71,8 @@ function dynamicInterval(){
         if(endGame()){ // if game ends
             return;
         }
+        currentX = xVel;
+        currentY = yVel;
         dynamicInterval();
     }, 1000 / framesPerSecond);
 }
@@ -99,30 +105,30 @@ function key(){
         }
     });
     document.addEventListener('keydown', function(event) {
-        if(event.key == ("ArrowLeft") || event.key == "a") {
-            if(xVel == 10){
+        if(event.key == ("ArrowLeft") || event.key == "a" || event.key == "A") {
+            if(currentX == 10){
                 return;
             }
             xVel = -10;
             yVel = 0;
             
         }
-        if(event.key == ("ArrowRight") || event.key == "d") {
-            if(xVel == -10){
+        if(event.key == ("ArrowRight") || event.key == "d" || event.key == "D") {
+            if(currentX == -10){
                 return;
             }
             xVel = 10;
             yVel = 0;
         }
-        if(event.key == ("ArrowUp") || event.key == "w") {
-            if(yVel == 10){
+        if(event.key == ("ArrowUp") || event.key == "w" || event.key == "W") {
+            if(currentY == 10){
                 return;
             }
             xVel = 0;
             yVel = -10;
         }
-        if(event.key == ("ArrowDown") || event.key == "s") {
-            if(yVel == -10){
+        if(event.key == ("ArrowDown") || event.key == "s" || event.key == "S") {
+            if(currentY == -10){
                 return;
             }
             xVel = 0;
@@ -142,7 +148,7 @@ function collision(){
     if(snake[0][0] == appleX && snake[0][1] == appleY){
         generateApple();
         snake.push(tailPos);
-        addScore()
+        addScore();
     }
 }
 
