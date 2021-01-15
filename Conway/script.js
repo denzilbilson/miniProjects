@@ -4,9 +4,7 @@ var canvasContext;
 
 // cells array
 var cells = [];
-
-// grid array
-var grid = [];
+var tempArray;
 
 window.onload = () => {
     // define how many times setInterval function runs a second
@@ -16,7 +14,6 @@ window.onload = () => {
     document.addEventListener("mousedown", createCell);
     canvas = document.getElementById("gameCanvas");
     canvasContext = canvas.getContext('2d');
-    createGrid();
 
     const intervalID = setInterval(() => {
         render();
@@ -25,92 +22,86 @@ window.onload = () => {
 
 function render() {
     createRect(0, 0, canvas.width, canvas.height, '#ffffff');
-    cells.forEach((coor) => {
-        createRect(coor.x, coor.y, 10, 10, '#000000');
+    cells.forEach((item) => {
+        var coor = item.split(" ");
+        createRect(coor[0], coor[1], 10, 10, '#000000');
     })
-}
-
-function createGrid() {
-    for (var i = 0; i < (canvas.width / 10) * (canvas.height / 10); i++) {
-        grid.push([i]);
-    }
 }
 
 function startGame() {
     setInterval(() => {
-        birthCell();
-        //removeCells();
-        console.log(cells);
-    }, 1000 / 1);
+        manageCells();
+    }, 1000 / 30);
 }
-function birthCell() {
-    var checkCell = JSON.stringify(cells);
-    cells.forEach((coor) => {
-        var sideCells = 0;
-        if (checkCell.includes([coor[0] - 10, coor[1]] - 10)) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0], coor[1]] - 10)) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0] + 10, coor[1]] - 10)) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0] - 10, coor[1]])) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0] + 10, coor[1]])) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0] - 10, coor[1]] + 10)) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0], coor[1]] + 10)) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0] + 10, coor[1]] + 10)) {
-            sideCells++;
+function manageCells() {
+    tempArray = cells;
+    cells.forEach((item) => {
+        var coor = item.split(" ");
+        let x = parseInt(coor[0]);
+        let y = parseInt(coor[1]);
+        var side = 0;
+        
+        side += checkCells((x - 10) , (y - 10));
+        side += checkCells( x , (y - 10));
+        side += checkCells( (x + 10) , (y - 10));
+        side += checkCells( (x - 10) , y);
+        side += checkCells( (x + 10) , y);
+        side += checkCells( (x - 10) , (y + 10));
+        side += checkCells( x , (y + 10));
+        side += checkCells( (x + 10) , (y + 10));
+
+        if(side > 3 || side < 2){
+            for( var i = 0; i < cells.length; i++){ 
+                if (cells[i] == item) { 
+                    tempArray.splice(i, 1);
+                    return;
+                }
+            }
         }
 
-        if (sideCells == 3) {
-            cells.push(coor);
-        }
-    })
+    });
+    cells = tempArray;
 }
-function removeCells() {
-    var checkCell = JSON.stringify(cells);
-    grid.forEach((coor) => {
-        var sideCells = 0;
-        if (checkCell.includes([coor[0] - 10, coor[1]] - 10)) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0], coor[1]] - 10)) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0] + 10, coor[1]] - 10)) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0] - 10, coor[1]])) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0] + 10, coor[1]])) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0] - 10, coor[1]] + 10)) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0], coor[1]] + 10)) {
-            sideCells++;
-        }
-        if (checkCell.includes([coor[0] + 10, coor[1]] + 10)) {
-            sideCells++;
-        }
+function checkCells(x,y) {
+    var sideCells = 0;
+    var current = x + " " + y;
 
-        // game law
-        if (sideCells < 2 || sideCells > 3) {
-            cells.splice(cells.indexOf(coor), 1);
+    if(cells.includes(current)){
+        return 1;
+    }
+    if (cells.includes((x - 10) + " " + (y - 10))) {
+        sideCells++;
+    }
+    if (cells.includes( x + " " + (y - 10))) {
+        sideCells++;
+    }
+    if (cells.includes( (x + 10) + " " + (y - 10))) {
+        sideCells++;
+    }
+    if (cells.includes( (x - 10) + " " + y)) {
+        sideCells++;
+    }
+    if (cells.includes( (x + 10) + " " + y)) {
+        sideCells++;
+    }
+    if (cells.includes( (x - 10) + " " + (y + 10))) {
+        sideCells++;
+    }
+    if (cells.includes( x + " " + (y + 10))) {
+        sideCells++;
+    }
+    if (cells.includes( (x + 10) + " " + (y + 10))) {
+        sideCells++;
+    }
+
+    if(sideCells == 3){
+        if(x <= 390 || x >= 0 || y <= 390 || y >= 0){
+            tempArray.push(current);
         }
-    })
+    }
+
+    return 0;
+
 }
 
 // future function to handle clicking and dragging
@@ -118,21 +109,20 @@ function onMouseDown(event) {
 
 }
 function createCell(event) {
-    var checkCell = JSON.stringify(cells);
     var rect = canvas.getBoundingClientRect();
     var xPos = Math.floor((event.clientX - rect.left) / 10) * 10;
     var yPos = Math.floor((event.clientY - rect.top) / 10) * 10;
+    if(xPos > 390 || xPos < 0 || yPos > 390 || yPos < 0){
+        return;
+    }
+    var newCell = xPos + " " + yPos;
+    console.log(cells.includes((xPos + 10) + " " + (yPos + 10)));
     for( var i = 0; i < cells.length; i++){ 
-        if (cells[i].x == xPos && cells[i].y == yPos) { 
+        if (cells[i] == newCell) { 
             cells.splice(i, 1);
             return;
         }
     }
-    let newCell = {
-        x: xPos,
-        y: yPos,
-        alive: true
-    };
     cells.push(newCell);
     console.log(cells);
 }
