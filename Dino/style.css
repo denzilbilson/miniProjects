@@ -24,7 +24,7 @@
     position: relative;
     top: 210px;
     left: 570px;
-    animation: obstacle 1s linear infinite;
+    animation: obstacle 3s linear infinite;
 }
 .jump-animation{
     animation: jump 500ms linear;
