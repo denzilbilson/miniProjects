@@ -26,22 +26,20 @@ window.onload = () => {
 function render() {
     createRect(0, 0, canvas.width, canvas.height, '#ffffff');
     cells.forEach((coor) => {
-        createRect(coor[0], coor[1], 10, 10, '#000000');
+        createRect(coor.x, coor.y, 10, 10, '#000000');
     })
 }
 
 function createGrid() {
-    for (var i = 0; i < canvas.width / 10; i++) {
-        for (var j = 0; j < canvas.height / 10; j++) {
-            grid.push([i * 10, j * 10, "dead"]);
-        }
+    for (var i = 0; i < (canvas.width / 10) * (canvas.height / 10); i++) {
+        grid.push([i]);
     }
 }
 
 function startGame() {
     setInterval(() => {
         birthCell();
-        removeCells();
+        //removeCells();
         console.log(cells);
     }, 1000 / 1);
 }
@@ -124,7 +122,19 @@ function createCell(event) {
     var rect = canvas.getBoundingClientRect();
     var xPos = Math.floor((event.clientX - rect.left) / 10) * 10;
     var yPos = Math.floor((event.clientY - rect.top) / 10) * 10;
-    cells.push([xPos, yPos]);
+    for( var i = 0; i < cells.length; i++){ 
+        if (cells[i].x == xPos && cells[i].y == yPos) { 
+            cells.splice(i, 1);
+            return;
+        }
+    }
+    let newCell = {
+        x: xPos,
+        y: yPos,
+        alive: true
+    };
+    cells.push(newCell);
+    console.log(cells);
 }
 
 function printMousePos(event) {
